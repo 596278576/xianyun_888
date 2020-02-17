@@ -1,5 +1,5 @@
 <template>
-  <div>酒店首页</div>
+  <div>酒店首页提交测试</div>
 </template>
 
 <script>
