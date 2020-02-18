@@ -3,7 +3,7 @@
     <div class="listleft">
       <div class="listleft-li" v-for="(item,index) in hotCity" :key="index">
         <div @mouseover="listRight(index)" @mouseout="listRight_show">
-          <el-row type="flex" class="row-bg li" justify="space-between" align="middle">
+          <el-row type="flex" class="row-bg li" ref="li" justify="space-between" align="middle">
             <span>{{item.type}}</span>
             <span class="el-icon-arrow-right"></span>
           </el-row>
@@ -11,7 +11,12 @@
       </div>
     </div>
 
-    <div class="listRight" v-if="listRight_if" @mousemove="listRight_show2" @mouseout="listRight_show">
+    <div
+      class="listRight"
+      v-if="listRight_if"
+      @mousemove="listRight_show2"
+      @mouseout="listRight_show3"
+    >
       <p v-for="(items,indexs) in children" :key="indexs">
         <span>{{++indexs}}</span>
         <span @click="$store.commit('post/setSearch',items.city)">{{items.city}}</span>
@@ -28,20 +33,30 @@ export default {
       listRight_if: false,
       hotCity: [],
       children: [],
-      index:''
+      indexs: ""
     };
   },
   methods: {
     listRight(index) {
       this.children = this.hotCity[index].children;
       this.listRight_if = true;
-      this.index=index
+      this.indexs = index;
     },
     listRight_show() {
       this.listRight_if = false;
     },
-    listRight_show2(){
+    listRight_show2() {
       this.listRight_if = true;
+      this.$refs.li.forEach(v => {
+        v.$el.classList.remove("test");
+      });
+      this.$refs.li[this.indexs].$el.classList.add("test");
+    },
+    listRight_show3() {
+      this.listRight_if = false;
+      this.$refs.li.forEach(v => {
+        v.$el.classList.remove("test");
+      });
     }
   },
   mounted() {
@@ -67,14 +82,11 @@ export default {
     }
     .listleft-li {
       border-bottom: 1px solid #ddd;
-      &:hover {
-        border-right: none;
-      }
     }
     /deep/ .li {
       height: 40px;
       padding: 0 20px;
-      font-size: 14px;
+      font-size: 15px;
       box-sizing: border-box;
       &:hover {
         color: #ffa500;
@@ -102,27 +114,33 @@ export default {
         &:nth-child(1) {
           color: #ffa500;
           font-style: italic;
-          cursor:pointer;
+          cursor: pointer;
         }
         &:nth-child(2) {
           color: #ffa500;
           margin-left: 10px;
-          cursor:pointer;
-          &:hover{ 
-            text-decoration: underline; 
-          } 
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
         }
         &:nth-child(3) {
           color: #8f8f8f;
           margin-left: 10px;
-          cursor:pointer;
+          cursor: pointer;
           // text-decoration: #8f8f8f;
-          &:hover{ 
-            text-decoration: underline; 
-          } 
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
   }
+}
+.test {
+  color: #ffa500;
+  // box-sizing: border-box;
+  box-shadow: 5px 0 3px 0px #fff;
+  z-index: 30;
 }
 </style>
