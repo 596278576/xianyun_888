@@ -1,21 +1,45 @@
 <template>
   <div>
     <div class="seach">
-      <input type="text" placeholder="请输入你想去的地方比如广州" />
+      <input type="text" v-model="city" placeholder="请输入你想去的地方比如广州" @change="sendSearch"/>
       <i class="el-icon-search"></i>
     </div>
     <!-- 推荐 -->
     <div class="recommend">
       <span>推荐</span>
-      <a href="#">广州</a>
-      <a href="#">上海</a>
-      <a href="#">北京</a>
+      <a href="javascript:undefined" v-for="(item,index) in tuijianCity" :key="item" @click="tuijian(index)">{{item}}</a>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data () {
+    return {
+      city:'',
+      tuijianCity:['广州','上海','北京']
+    }
+  },
+  methods:{
+    sendSearch(){
+      this.$store.commit('post/setSearch',this.city)
+    },
+    tuijian(index){
+      this.city=this.tuijianCity[index]
+      this.$store.commit('post/setSearch',this.city)
+
+    }
+  }
+  // computed:{
+  //   search(){
+  //     // this.city=
+  //     // console.log(this.city);
+      
+  //     this.$store.commit('post/setSearch',this.city)
+  //     return ''
+  //   }
+  // }
+};
 </script>
 
 <style scoped lang='less'>

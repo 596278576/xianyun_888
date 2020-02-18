@@ -1,5 +1,10 @@
 export const state = () => {
     return {
-        a: 123
+        search:''
+    }
+}
+export let mutations={
+    setSearch(state,data){
+        state.search=data
     }
 }
