@@ -7,7 +7,8 @@
         <articleDetail />
         <!-- 用户输入 -->
         <comments />
-        
+        <!-- 展示评论 -->
+        <commentShow/>
       </div>
 
       <!-- 右侧 -->
@@ -19,11 +20,17 @@
 <script>
 import articleDetail from "@/components/post/articleDetail";
 import comments from "@/components/post/comments";
+import commentShow from "@/components/post/commentShow";
+
 
 export default {
   components: {
+    // 文章
     articleDetail,
-    comments
+    // 评论输入
+    comments,
+    // 展示评论
+    commentShow
   }
 };
 </script>

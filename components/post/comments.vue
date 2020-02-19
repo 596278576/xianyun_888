@@ -57,18 +57,22 @@ export default {
 /*提交按钮*/
 .el-button--primary{
   height: 38px;
+  margin-right: 13px; 
 }
 /* 输入框 */
 .userInput {
-  width: 660px;
+  width: 90%;
   border: 1px solid #0094ff;
   padding: 10px 20px;
   text-align: left;
+  margin: 0 auto;
   margin-top: 20px;
+  
   color: #999;
 }
 /* 图片预览 */
 .showImg {
+  margin-left: 14px;
   width: 610px;
 
 }
