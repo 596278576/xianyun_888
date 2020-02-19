@@ -2,14 +2,12 @@
   <div class="postdetail">
     <el-row type="flex">
       <!-- 左侧 -->
-      <div class="main">
+      <div class="main clearfix">
         <!-- 文章详情 -->
         <articleDetail />
-        <!-- 用户评论 -->
-        <div class="usercomment">
-          <div>评论</div>
-          <textarea></textarea>
-        </div>
+        <!-- 用户输入 -->
+        <comments />
+        
       </div>
 
       <!-- 右侧 -->
@@ -20,9 +18,12 @@
 
 <script>
 import articleDetail from "@/components/post/articleDetail";
+import comments from "@/components/post/comments";
+
 export default {
   components: {
-    articleDetail
+    articleDetail,
+    comments
   }
 };
 </script>
@@ -31,5 +32,13 @@ export default {
 .postdetail {
   width: 1000px;
   margin: 0 auto;
+  padding:20px 0;
+}
+
+.clearfix::before,
+.clearfix::after{
+    content: "";
+    clear:both;
+    display: block;
 }
 </style>
