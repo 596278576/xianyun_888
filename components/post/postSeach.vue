@@ -27,7 +27,6 @@ export default {
     tuijian(index){
       this.city=this.tuijianCity[index]
       this.$store.commit('post/setSearch',this.city)
-
     }
   }
   // computed:{
