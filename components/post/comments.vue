@@ -1,63 +1,102 @@
 <template>
   <!-- 用户评论 -->
   <div class="commentContainer">
-    <strong>评论</strong>
-    <div class="userInput" contenteditable="true" @click="handleinput"></div>
+    <strong>{{commentTitle}}</strong>
+    <div class="userInput" ref="commentcontent" contenteditable="true" @click=""></div>
     <!-- 图片及按钮 -->
     <div class="commentdown">
       <el-row type="flex" justify="space-between">
         <!-- 图片预览 -->
         <div class="showImg">
           <el-upload
-            class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :action="$axios.defaults.baseURL+'/upload'"
+            list-type="picture-card"
+            :on-success="upsuccess"
+            :on-remove="removesuccess"
+            name="files"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <i class="el-icon-plus"></i>
           </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt />
+          </el-dialog>
         </div>
-        <el-button icon="userCommit" type="primary">提交</el-button>
+        <el-button icon="userCommit" type="primary" @click="commitComment">提交</el-button>
       </el-row>
-    </div>  
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      pics: [],
+      dialogImageUrl: "",
+      dialogVisible: false
+    };
+  },
+  props:['commentTitle'],
   methods: {
-    // 用户的时候
-    handleinput() {
-      let userInput = document.querySelector(".userInput");
-      let value = userInput.innerText;
-      console.log(userInput.innerText);
+    // 上传成功图片时
+    upsuccess(response, file, fileList) {
+      file.response[0].url = this.$axios.defaults.baseURL + file.response[0].url;  
+      this.pics.push(file.response[0]);
+      console.log();
     },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+    //文件删除时
+    removesuccess(file, fileList) {
+      this.pics.forEach((item,index)=>{
+        if(file.response[0].id == item.id){
+          this.pics.splice(index,1)
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+      })
+       console.log(this.pics);
+    },
+    //点击提交
+    commitComment() {
+      this.$axios({
+        url: "/comments",
+        method: "POST",
+        data: {
+          content: this.$refs.commentcontent.innerText,
+          pics: this.pics,
+          post: this.$route.query.id
+        },
+        headers: {
+          // 'Content-Type':'application/json',
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
         }
-        return isJPG && isLt2M;
-      }
+      }).then(res => {
+        this.$message.success("评论成功");
+        this.$emit("addComments");
+      });
+       this.pics = [];
+       let userInput = document.querySelector(".userInput");
+       userInput.innerText = "";
+       this.dialogImageUrl = ""
+    },
+  
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    }
   }
 };
 </script>
 
 <style>
+.commentContainer {
+  max-width: 712px;
+  width: 98%;
+}
 /*提交按钮*/
-.el-button--primary{
+.el-button--primary {
   height: 38px;
-  margin-right: 13px; 
+  margin-right: 13px;
 }
 /* 输入框 */
 .userInput {
@@ -67,14 +106,13 @@ export default {
   text-align: left;
   margin: 0 auto;
   margin-top: 20px;
-  
+
   color: #999;
 }
 /* 图片预览 */
 .showImg {
   margin-left: 14px;
   width: 610px;
-
 }
 .commentdown {
   /* padding:20px; */
@@ -82,26 +120,26 @@ export default {
 }
 /* 文件上传 */
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
