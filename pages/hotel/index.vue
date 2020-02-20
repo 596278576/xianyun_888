@@ -35,7 +35,7 @@
         <el-button type="primary">查看价格</el-button>
     </el-row>
     <!-- 定位 -->
-    <el-row type="flex">
+    <el-row type="flex" :gutter="5">
       <!-- 区域 -->
       <el-col :span="14">
          <el-row>
@@ -54,19 +54,27 @@
       </el-col>
       <!-- 地图 -->
       <el-col :span="10">
-
+          <Map></Map>
       </el-col>
+    </el-row>
+    <!-- 过滤器 -->
+    <el-row>
+
     </el-row>
   </div>
 </template>
 
 <script>
+import Map from '@/components/hotel/map'
 export default {
   data() {
     return {
       input: "",
       value: ""
     };
+  },
+  components:{
+    Map
   }
 };
 </script>
