@@ -7,7 +7,10 @@
           <p>{{item.title}}</p>
           <div class="content" v-html="item.content"></div>
           <el-row type="flex" class="row-bg img" justify="space-between">
-            <img v-for="(items,indexs) in item.images" :key="indexs" :src="items" alt />
+            <!-- <img v-for="(items,indexs) in item.images" :key="indexs" :src="items" alt /> -->
+            <img :src="item.images[0]" alt="">
+            <img :src="item.images[1]" alt="">
+            <img :src="item.images[2]" alt="">
           </el-row>
           <el-row type="flex" class="row-bg footer" justify="space-between">
             <div class="left">
@@ -74,7 +77,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3, 5, 10, 15]"
-        :page-size="pageSize"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
@@ -88,24 +91,34 @@ export default {
     return {
       dataList: [],
       total: 0,
-      pageSize: 3, //每页多少条
       currentPage: 1, //第几页
       start: 0,
-      limit: 3
+      limit: 5,//每页多少条
     };
   },
   methods: {
     handleSizeChange(val) {
-      //   console.log(`每页 ${val} 条`);
       this.limit = val;
-      this.init();
+      this.start = (this.currentPage - 1) * val;
+      //   console.log(`每页 ${val} 条`);
+      if (this.$store.state.post.search) {
+          this.inits()
+      } else {
+        this.init();
+      }
     },
     handleCurrentChange(val) {
       //   console.log(`当前页: ${val}`);
-      this.start = val;
-      this.init();
+      this.start = (val - 1) * this.limit;
+      this.currentPage = val;
+      if (this.$store.state.post.search) {
+        this.inits()
+      } else {
+        this.init();
+      }
     },
-    init(city) {
+    //不搜索任何城市的数据
+    init() {
       this.$axios({
         url: "/posts",
         params: {
@@ -116,18 +129,12 @@ export default {
         this.dataList = res.data.data;
         this.total = res.data.total;
         console.log(res);
+        
       });
-    }
-  },
-  mounted() {
-    this.init();
-    // console.log(this.$store.state.post.search);
-  },
-  watch: {
-    "$store.state.post.search"() {
-      if (!this.$store.state.post.search) return;
-      // console.log(this.$store.state.post.search);
-      this.$axios({
+    },
+    //搜索指定城市的数据
+    inits() {
+       this.$axios({
         url: "/posts",
         params: {
           _start: this.start,
@@ -137,8 +144,27 @@ export default {
       }).then(res => {
         this.dataList = res.data.data;
         this.total = res.data.total;
-        // console.log(res);
+        if(res.data.total===0){
+          this.$message.error('没有相关数据')
+        }
       });
+    }
+  },
+  mounted() {
+    this.$store.commit('post/setSearch','')
+    this.init();
+    
+    // console.log(this.$store.state.post.search);
+  },
+  watch: {
+    "$store.state.post.search"() {
+      this.currentPage = 1;
+      this.start=(this.currentPage-1)*this.limit
+      if (!this.$store.state.post.search) {
+        this.init();
+      }else{
+        this.inits()
+      }
     }
   }
 };

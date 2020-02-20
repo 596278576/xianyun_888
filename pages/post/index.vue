@@ -13,7 +13,10 @@
           <div class="recommendedRaidersLeft">
             相关攻略
           </div>
-          <el-button type="primary" icon="el-icon-edit" class="travels">写游记</el-button>
+          <nuxt-link to='/post/create'>
+            <el-button type="primary" icon="el-icon-edit" class="travels">写游记</el-button>
+          </nuxt-link>
+          
         </el-row>
         <!-- 文章列表 -->
         <PostList/>
