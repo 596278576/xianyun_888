@@ -150,6 +150,7 @@ export default {
                 seat_xid
             }
         }).then(res => {
+            console.log(res.data)
             // 赋值给机票的详细信息
             this.infoData = res.data;
 
