@@ -58,7 +58,7 @@ export default {
          id:this.$route.query.id
        }
      }).then(res=>{
-       console.log(res);
+      //  console.log(res);
        this.recommendData = res.data.data
      })
   },
@@ -68,7 +68,7 @@ export default {
       this.init();
     },
     init() {
-      // 加载文章、评论
+      // 加载评论
       this.$axios({
         url: "/posts/comments",
         params: {

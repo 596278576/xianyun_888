@@ -8,7 +8,7 @@
       <h1>{{articledata.title}}</h1>
       <hr />
       <div class="read">
-        <span>攻略：2019-05-22 10:57</span>
+        <span>攻略：{{time}}</span>
         &nbsp;&nbsp;&nbsp;
         <span>阅读: {{articledata.watch}}</span>
       </div>
@@ -36,12 +36,14 @@
 </template>
 
 <script>
+var moment = require('moment');
 export default {
   data() {
     return {
       articledata: {
         comments: []
-      }
+      },
+      time:''
     };
   },
   mounted() {
@@ -57,7 +59,8 @@ export default {
       }).then(res => {
         // 获取文章相关信息
         this.articledata = res.data.data[0];
-        // console.log(res.data.data[0]);
+        let data = new Date(res.data.data[0].updated_at)
+        this.time = moment(data).format(`YYYY-MM-DD hh:mm`)
       });
     }
   }

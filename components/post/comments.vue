@@ -2,7 +2,7 @@
   <!-- 用户评论 -->
   <div class="commentContainer">
     <strong>{{commentTitle}}</strong>
-    <div class="userInput" ref="commentcontent" contenteditable="true" @click=""></div>
+    <div class="userInput" ref="commentcontent" contenteditable="true"></div>
     <!-- 图片及按钮 -->
     <div class="commentdown">
       <el-row type="flex" justify="space-between">
@@ -36,47 +36,73 @@ export default {
       dialogVisible: false
     };
   },
-  props:['commentTitle'],
+  //数据： 头部坐上角显示  判断是否回复用户
+  props: ["commentTitle",'fllow'],
   methods: {
     // 上传成功图片时
     upsuccess(response, file, fileList) {
-      file.response[0].url = this.$axios.defaults.baseURL + file.response[0].url;  
+      file.response[0].url =
+        this.$axios.defaults.baseURL + file.response[0].url;
       this.pics.push(file.response[0]);
       console.log();
     },
     //文件删除时
     removesuccess(file, fileList) {
-      this.pics.forEach((item,index)=>{
-        if(file.response[0].id == item.id){
-          this.pics.splice(index,1)
+      this.pics.forEach((item, index) => {
+        if (file.response[0].id == item.id) {
+          this.pics.splice(index, 1);
         }
-      })
-       console.log(this.pics);
+      });
+      console.log(this.pics);
     },
     //点击提交
     commitComment() {
-      this.$axios({
-        url: "/comments",
-        method: "POST",
-        data: {
-          content: this.$refs.commentcontent.innerText,
-          pics: this.pics,
-          post: this.$route.query.id
-        },
-        headers: {
-          // 'Content-Type':'application/json',
-          Authorization: "Bearer " + this.$store.state.user.userInfo.token
-        }
-      }).then(res => {
-        this.$message.success("评论成功");
-        this.$emit("addComments");
-      });
-       this.pics = [];
-       let userInput = document.querySelector(".userInput");
-       userInput.innerText = "";
-       this.dialogImageUrl = ""
+      // 若是用于回复
+      if (this.commentTitle === "评论") {
+        this.$axios({
+          url: "/comments",
+          method: "POST",
+          data: {
+            content: this.$refs.commentcontent.innerText,
+            pics: this.pics,
+            post: this.$route.query.id
+          },
+          headers: {
+            // 'Content-Type':'application/json',
+            Authorization: "Bearer " + this.$store.state.user.userInfo.token
+          }
+        }).then(res => {
+          this.$message.success("评论成功");
+          this.$emit("addComments");
+        });
+      }
+      //若是用于评论 
+      else {
+        this.$axios({
+          url: "/comments",
+          method: "POST",
+          data: {
+            content: this.$refs.commentcontent.innerText,
+            pics: this.pics,
+            post: this.$route.query.id,
+            follow:this.fllow
+          },
+          headers: {
+            // 'Content-Type':'application/json',
+            Authorization: "Bearer " + this.$store.state.user.userInfo.token
+          }
+        }).then(res => {
+          this.$message.success("回复成功");
+          this.$emit("addComments");
+        });
+      }
+
+      this.pics = [];
+      let userInput = document.querySelector(".userInput");
+      userInput.innerText = "";
+      this.dialogImageUrl = "";
     },
-  
+
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },

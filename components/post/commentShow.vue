@@ -12,11 +12,10 @@
           />
           <span class="username">{{commnetsdata.account.nickname}}</span>
           &nbsp;
-          <span class="day">2020-2-2</span>
-          &nbsp;
-          <span class="time">10:45</span>
+          {{time}}
         </div>
       </div>
+       <commentShow v-if="commnetsdata.parent" :commnetsdata="commnetsdata.parent" />
       <!-- 显示评论的内容-->
       <div class="userIn">
         <div>{{commnetsdata.content}}</div>
@@ -29,29 +28,46 @@
           />
         </div>
       </div>
-      <commentShow v-if="commnetsdata.parent" :commnetsdata="commnetsdata.parent" />
+     
       <!-- 回复 BUG-->
-      <span class="replybtn" @click="showReply = !showReply;">回复</span>
-      <comments v-if="showReply" />
+      <span class="replybtn" @click="ReplayClick">回复</span>
+      <comments 
+      v-if="showReply" 
+      :commentTitle="`@`+commnetsdata.account.nickname"
+      :fllow="commnetsdata.id"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import comments from "@/components/post/comments";
+var moment = require('moment');
 export default {
   name: "commentShow",
   data() {
     return {
-      showReply: false
+      showReply: false,
+      time:'',
     };
   },
   props: ["commnetsdata"],
   components: {
     comments
   },
-  mounted() {},
-  methods: {}
+  mounted() {
+    let data = new Date(this.commnetsdata.created_at)
+    this.time = moment(data).format('YYYY-MM-DD hh:mm')
+    console.log();
+    
+  },
+  methods: {
+    // 点击回复
+    ReplayClick(){
+      this.showReply = !this.showReply
+      
+    }
+  }
 };
 </script>
 
