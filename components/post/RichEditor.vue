@@ -3,6 +3,7 @@
       :editor="editor"
       :value="value"
       :config="editorConfig"
+      escapeHtml="false"
      @input="ev => $emit('input', ev)" 
    />
 </template>

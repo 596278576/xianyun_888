@@ -5,21 +5,21 @@
         <h2>发表新攻略</h2>
         <p class="create-desc">分享你的个人游记，让更多人看到哦</p>
 
-        <el-input v-model="input" placeholder="请输入标题"></el-input>
+        <el-input v-model="title" placeholder="请输入标题"></el-input>
         <div class="editor-height">
-          <rich-editor v-model="content" />
+          <rich-editor />
         </div>
 
         <el-row>
           <el-col :span="12" class="chengshi">
-            <el-input placeholder="请搜索游玩城市" v-model="input">
+            <el-input placeholder="请搜索游玩城市" v-model="city">
               <template slot="prepend">选择城市</template>
             </el-input>
           </el-col>
         </el-row>
 
         <el-col :span="12" class="first">
-          <el-button type="primary">发布</el-button>
+          <el-button type="primary" @click="post">发布</el-button>
           <span>
             或者
             <a href="javascript:void(0);">保存到草稿箱</a>
@@ -41,8 +41,41 @@ export default {
   data() {
     return {
       content: "",
-      input: ""
+      title: "",
+      city: ""
     };
+  },
+  methods: {
+    // 新增文章
+    post() {
+      if (this.content == "" && this.title == "" && this.city == "") {
+        this.$message({
+          message: "请填写完整",
+          type: "warning"
+        });
+        return;
+      }
+
+      this.$axios({
+        url: "/posts",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+        },
+        data: {
+          content: this.content,
+          title: this.title,
+          city: this.city
+        }
+      }).then(res => {
+        console.log(123);
+
+        this.$message({
+          message: "恭喜你，这是一条成功消息",
+          type: "success"
+        });
+      });
+    }
   }
 };
 </script>
@@ -103,7 +136,7 @@ h2 {
     color: #666;
   }
 }
-.caogaoxiang{
-    margin-left: 70px;
-    }
+.caogaoxiang {
+  margin-left: 70px;
+}
 </style>
