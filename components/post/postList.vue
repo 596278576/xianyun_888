@@ -8,9 +8,9 @@
           <div class="content" v-html="item.content"></div>
           <el-row type="flex" class="row-bg img" justify="space-between">
             <!-- <img v-for="(items,indexs) in item.images" :key="indexs" :src="items" alt /> -->
-            <img :src="item.images[0]" alt="">
-            <img :src="item.images[1]" alt="">
-            <img :src="item.images[2]" alt="">
+            <img :src="item.images[0]" alt />
+            <img :src="item.images[1]" alt />
+            <img :src="item.images[2]" alt />
           </el-row>
           <el-row type="flex" class="row-bg footer" justify="space-between">
             <div class="left">
@@ -35,7 +35,7 @@
         </nuxt-link>
       </div>
       <!-- 左右土文 -->
-      <div class="left_right" v-else-if="item.images.length==1">
+      <div class="left_right" v-else-if="item.images.length==1||item.images.length==2">
         <nuxt-link :to="`/post/detail?id=${item.id}`">
           <el-row type="flex" class="row-bg" justify="space-between">
             <div class="img">
@@ -102,9 +102,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page="Number($route.query.currentPage)"
         :page-sizes="[3, 5, 10, 15]"
-        :page-size="limit"
+        :page-size="Number(limit)"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
@@ -120,16 +120,24 @@ export default {
       total: 0,
       currentPage: 1, //第几页
       start: 0,
-      limit: 5,//每页多少条
+      limit: 5 //每页多少条
     };
   },
   methods: {
     handleSizeChange(val) {
       this.limit = val;
       this.start = (this.currentPage - 1) * val;
+      this.$router.replace({
+        path: "/post",
+        query: {
+          start: this.start,
+          limit: this.limit,
+          currentPage: this.currentPage
+        }
+      });
       //   console.log(`每页 ${val} 条`);
       if (this.$store.state.post.search) {
-          this.inits()
+        this.inits();
       } else {
         this.init();
       }
@@ -137,9 +145,17 @@ export default {
     handleCurrentChange(val) {
       //   console.log(`当前页: ${val}`);
       this.start = (val - 1) * this.limit;
-      this.currentPage = val;
+      this.currentPage = Number(val);
+      this.$router.replace({
+        path: "/post",
+        query: {
+          start: this.start,
+          limit: this.limit,
+          currentPage: this.currentPage
+        }
+      });
       if (this.$store.state.post.search) {
-        this.inits()
+        this.inits();
       } else {
         this.init();
       }
@@ -156,12 +172,11 @@ export default {
         this.dataList = res.data.data;
         this.total = res.data.total;
         console.log(res);
-        
       });
     },
     //搜索指定城市的数据
     inits() {
-       this.$axios({
+      this.$axios({
         url: "/posts",
         params: {
           _start: this.start,
@@ -171,28 +186,51 @@ export default {
       }).then(res => {
         this.dataList = res.data.data;
         this.total = res.data.total;
-        if(res.data.total===0){
-          this.$message.error('没有相关数据')
+        if (res.data.total === 0) {
+          this.$message.error("没有相关数据");
         }
         console.log(res.data.data);
-        
       });
     }
   },
   mounted() {
-    this.$store.commit('post/setSearch','')
-    this.init();
-    
+    if (!this.$route.query.start) {
+      this.$router.replace({
+        path: "/post",
+        query: {
+          start: this.start,
+          limit: this.limit,
+          currentPage: this.currentPage
+        }
+      });
+    } else {
+      this.start = this.$route.query.start;
+      this.limit = this.$route.query.limit;
+      this.currentPage = Number(this.$route.query.currentPage);
+    }
+    if (this.$store.state.post.search) {
+      this.inits();
+    } else {
+      this.init();
+    }
     // console.log(this.$store.state.post.search);
   },
   watch: {
     "$store.state.post.search"() {
+      this.$router.replace({
+        path: "/post",
+        query: {
+          start: 0,
+          limit: this.limit,
+          currentPage: 1
+        }
+      });
       this.currentPage = 1;
-      this.start=(this.currentPage-1)*this.limit
+      this.start =0;
       if (!this.$store.state.post.search) {
         this.init();
-      }else{
-        this.inits()
+      } else {
+        this.inits();
       }
     }
   }

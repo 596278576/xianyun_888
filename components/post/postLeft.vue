@@ -28,7 +28,10 @@
     <div>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>城市大全</span>
+          <el-row type="flex" class="row-bg" justify="space-between" align="center">
+            <span class="cityall">城市大全</span>
+            <el-button type="primary" size="mini" plain @click="huan">换一批</el-button>
+          </el-row>
         </div>
         <div v-for="(item,index) in cityList" :key="index" class="text item">
           <p @click="cityChange(item.name)" class="cityName">{{item.name}}</p>
@@ -46,7 +49,10 @@ export default {
       hotCity: [],
       children: [],
       indexs: "",
-      cityList:[]
+      cityList: [],
+      cityData:[],
+      jishu1:0,
+      jishu2:25
     };
   },
   methods: {
@@ -73,8 +79,21 @@ export default {
       });
     },
     //城市大全点击事件
-    cityChange(item){
-      this.$store.commit('post/setSearch',item)
+    cityChange(item) {
+      this.$store.commit("post/setSearch", item);
+    },
+    //切换
+    huan(){
+      if(this.jishu2<=99){
+        this.jishu1+=25;
+        this.jishu2+=25;
+        this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
+      }else{
+        this.jishu1=0
+        this.jishu2=25
+        this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
+      }
+
     }
   },
   mounted() {
@@ -83,7 +102,6 @@ export default {
     }).then(res => {
       this.hotCity = res.data.data;
       console.log(this.hotCity);
-      
     });
 
     this.$axios({
@@ -95,7 +113,8 @@ export default {
       }
     }).then(res => {
       // console.log(res);
-      this.cityList=res.data.data
+      this.cityData=[...res.data.data]
+      this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
     });
   }
 };
@@ -174,15 +193,21 @@ export default {
   box-shadow: 5px 0 3px 0px #fff;
   z-index: 30;
 }
-.cityName{
+.cityName {
   margin: 10px 0;
-  &:hover{
+  &:hover {
     color: #ffa500;
-    cursor:pointer;
+    cursor: pointer;
     text-decoration: underline;
   }
 }
-/deep/ .el-card__body{
+/deep/ .el-card__body {
   padding-top: 0px;
+}
+.huan {
+  float: right;
+}
+.cityall{
+  margin-top: 2px;
 }
 </style>
