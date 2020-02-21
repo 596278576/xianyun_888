@@ -87,11 +87,11 @@ export default {
       if(this.jishu2<=99){
         this.jishu1+=25;
         this.jishu2+=25;
-        this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
+        this.cityList = this.cityData.slice(this.jishu1,this.jishu2);
       }else{
         this.jishu1=0
         this.jishu2=25
-        this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
+        this.cityList = this.cityData.slice(this.jishu1,this.jishu2);
       }
 
     }
@@ -114,7 +114,9 @@ export default {
     }).then(res => {
       // console.log(res);
       this.cityData=[...res.data.data]
-      this.cityList = this.cityData.slice(this.jishu1,this.jishu12);
+      this.cityList = this.cityData.slice(this.jishu1,this.jishu2);
+      console.log(this.cityList);
+      
     });
   }
 };
