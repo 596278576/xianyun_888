@@ -36,23 +36,23 @@
     <el-row class="photo-left">
       <!-- 左侧图片 -->
       <el-col class="left el-col el-col-16">
-        <img
+        <!-- <img
           height="360"
           width="640"
           src="http://157.122.54.189:9095/images/hotel-pics/1.jpeg"
           alt=" 广州华尔道夫酒店"
-        />
+        />-->
       </el-col>
       <el-col class="right el-col el-col-8">
         <!-- 右侧图片 -->
         <el-row class="photo-right" style="margin-left: -10px; margin-right: -10px;">
           <el-col class="el-col el-col-12" style="padding-left:10px;padding-right:10px">
             <a href="javascript:void(0)">
-              <img
+              <!-- <img
                 width="160px"
                 src="http://157.122.54.189:9095/images/hotel-pics/1.jpeg"
                 alt="广州华尔道夫酒店"
-              />
+              />-->
             </a>
           </el-col>
         </el-row>
