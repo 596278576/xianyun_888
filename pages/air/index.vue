@@ -12,7 +12,7 @@
 
             <!-- banner广告 -->
             <div class="sale-banner">
-                <img src="http://157.122.54.189:9093/images/pic_sale.jpeg" />
+                <img src="http://157.122.54.189:9093/images/pic_sale.jpeg"    />
             </div>
         </el-row>
 
