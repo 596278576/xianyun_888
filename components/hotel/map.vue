@@ -1,14 +1,15 @@
 <template>
-    <div class="map" id="container">
-
-    </div>
+  <div class="map" id="container"></div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      map: ""
+      map: "",
+      marker:'',
+      cityinfo:'',
+      citybounds:{}
     };
   },
   mounted() {
@@ -18,14 +19,39 @@ export default {
     jsapi.charset = "utf-8";
     jsapi.src = url;
     document.head.appendChild(jsapi);
-    this.mapInit()
+    this.mapInit();
   },
   methods: {
     mapInit() {
       window.onLoad = function() {
-        this.map = new AMap.Map("container",{
-            resizeEnable:true
+        // 创建一个 Map 实例：
+        this.map = new AMap.Map("container", {
+          resizeEnable: true
+        }).plugin("AMap.CitySearch", function() {
+          var citySearch = new AMap.CitySearch();
+          citySearch.getLocalCity(function(status, result) {
+            if (status === "complete" && result.info === "OK") {
+              // 查询成功，result即为当前所在城市信息
+              console.log(result);
+              if(result&&result.city&&result.bounds){
+                this.cityinfo=result.city;
+                this.citybounds=result.bounds
+              }
+            }
+          });         
         });
+        // 创建一个 Marker 实例：
+          this.marker = new AMap.Marker({
+            icon: "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png",
+            position: new AMap.LngLat(this.citybounds.xc.lng, this.citybounds.xc.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+            title: this.cityinfo
+          });
+
+          // 将创建的点标记添加到已有的地图实例：
+          map.add(marker);
+
+          // 移除已创建的 marker
+          // map.remove(marker);
       };
     }
   }
@@ -34,7 +60,7 @@ export default {
 
 <style lang='less' scoped>
 .map {
-    width: 420px;
-    height: 260px;
+  width: 420px;
+  height: 260px;
 }
 </style>
