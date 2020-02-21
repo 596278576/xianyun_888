@@ -28,16 +28,12 @@ export default {
       this.city=this.tuijianCity[index]
       this.$store.commit('post/setSearch',this.city)
     }
+  },
+  watch: {
+    "$store.state.post.search"(){
+      this.city=this.$store.state.post.search
+    }
   }
-  // computed:{
-  //   search(){
-  //     // this.city=
-  //     // console.log(this.city);
-      
-  //     this.$store.commit('post/setSearch',this.city)
-  //     return ''
-  //   }
-  // }
 };
 </script>
 

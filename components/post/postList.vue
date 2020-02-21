@@ -35,7 +35,7 @@
         </nuxt-link>
       </div>
       <!-- 左右土文 -->
-      <div class="left_right" v-else-if="item.images.length<=2">
+      <div class="left_right" v-else-if="item.images.length==1">
         <nuxt-link :to="`/post/detail?id=${item.id}`">
           <el-row type="flex" class="row-bg" justify="space-between">
             <div class="img">
@@ -65,6 +65,33 @@
                   <span class="like">{{item.like}}赞</span>
                 </div>
               </el-row>
+            </div>
+          </el-row>
+        </nuxt-link>
+      </div>
+      <!-- 这是没有图片的 -->
+      <div class="upper_lower" v-else>
+        <nuxt-link :to="`/post/detail?id=${item.id}`">
+          <p>{{item.title}}</p>
+          <div class="content" v-html="item.content"></div>
+          <el-row type="flex" class="row-bg footer" justify="space-between">
+            <div class="left">
+              <span class="el-icon-location-outline"></span>
+              <span>{{item.cityName}}</span>
+              <span>by</span>
+              <span>
+                <img
+                  :src="`${$axios.defaults.baseURL}${item.account.defaultAvatar}`"
+                  class="user"
+                  alt
+                />
+              </span>
+              <span class="nickname">{{item.account.nickname}}</span>
+              <span class="el-icon-view"></span>
+              <span>{{item.watch}}</span>
+            </div>
+            <div class="right">
+              <span class="like">{{item.like}}赞</span>
             </div>
           </el-row>
         </nuxt-link>
@@ -147,6 +174,8 @@ export default {
         if(res.data.total===0){
           this.$message.error('没有相关数据')
         }
+        console.log(res.data.data);
+        
       });
     }
   },

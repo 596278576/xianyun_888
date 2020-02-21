@@ -2,7 +2,7 @@
   <el-row class="row-bg postLeft">
     <div class="listleft">
       <div class="listleft-li" v-for="(item,index) in hotCity" :key="index">
-        <div @mouseover="listRight(index)" @mouseout="listRight_show">
+        <div @mouseover="listRight(index)" @mouseleave="listRight_show">
           <el-row type="flex" class="row-bg li" ref="li" justify="space-between" align="middle">
             <span>{{item.type}}</span>
             <span class="el-icon-arrow-right"></span>
@@ -15,7 +15,7 @@
       class="listRight"
       v-if="listRight_if"
       @mousemove="listRight_show2"
-      @mouseout="listRight_show3"
+      @mouseleave="listRight_show3"
     >
       <p v-for="(items,indexs) in children" :key="indexs">
         <span>{{++indexs}}</span>
