@@ -114,7 +114,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .commentContainer {
   max-width: 712px;
   width: 98%;
