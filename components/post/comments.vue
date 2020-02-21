@@ -57,6 +57,10 @@ export default {
     },
     //点击提交
     commitComment() {
+      if(!this.$refs.commentcontent.innerText){
+        this.$message.error('评论不能为空')
+        return
+      }
       // 若是用于回复
       if (this.commentTitle === "评论") {
         this.$axios({

@@ -36,39 +36,30 @@
 </template>
 
 <script>
-var moment = require('moment');
+var moment = require("moment");
 export default {
+  props: {
+    articledata: {
+      type: Object,
+      default: {}
+    }
+  },
   data() {
     return {
-      articledata: {
-        comments: []
-      },
-      time:''
+      time: ""
     };
   },
   mounted() {
-    this.init();
-  },
-  methods: {
-    init() {
-      this.$axios({
-        url: "/posts",
-        params: {
-          id: this.$route.query.id
-        }
-      }).then(res => {
-        // 获取文章相关信息
-        this.articledata = res.data.data[0];
-        let data = new Date(res.data.data[0].updated_at)
-        this.time = moment(data).format(`YYYY-MM-DD hh:mm`)
-      });
+    if (this.articledata) {
+      // 获取文章相关信息
+      let data = new Date(this.articledata.updated_at);
+      this.time = moment(data).format(`YYYY-MM-DD hh:mm`);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-
 .detail {
   width: 700px;
   float: left;
@@ -119,13 +110,12 @@ export default {
         color: #ffa500;
       }
     }
-    .content{
-      /deep/img{
-        width:100%;
+    .content {
+      /deep/img {
+        max-width: 700px;
       }
     }
   }
   // 内容
-  
 }
 </style>
