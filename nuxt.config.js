@@ -40,12 +40,8 @@ export default {
   plugins: [
     "@/plugins/element-ui",
     { src: "@/plugins/localStorage", ssr: false },
-<<<<<<< HEAD
-    "@/plugins/axios"
-=======
     "@/plugins/axios",
     { src: '~/plugins/rich-editor', mode: 'client' }
->>>>>>> e509edc7ae22a1c4c6352d5cf5c5dd804465bf9e
   ],
   /*
    ** Nuxt.js dev-modules
