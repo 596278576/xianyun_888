@@ -5,14 +5,14 @@
         <h2>发表新攻略</h2>
         <p class="create-desc">分享你的个人游记，让更多人看到哦</p>
 
-        <el-input v-model="title" placeholder="请输入标题"></el-input>
+        <el-input v-model="form.title" placeholder="请输入标题"></el-input>
         <div class="editor-height">
-          <rich-editor />
+          <rich-editor v-model="form.content" />
         </div>
 
         <el-row>
           <el-col :span="12" class="chengshi">
-            <el-input placeholder="请搜索游玩城市" v-model="city">
+            <el-input placeholder="请搜索游玩城市" v-model="form.city">
               <template slot="prepend">选择城市</template>
             </el-input>
           </el-col>
@@ -22,14 +22,21 @@
           <el-button type="primary" @click="post">发布</el-button>
           <span>
             或者
-            <a href="javascript:void(0);">保存到草稿箱</a>
+            <a href="javascript:void(0);" @click="save">保存到草稿箱</a>
           </span>
         </el-col>
       </el-col>
       <!-- 草稿箱 -->
       <el-col :span="5" class="caogaoxiang">
         <div class="draft-box">
-          <h4>草稿箱(0)</h4>
+          <h4>草稿箱({{recordB.length-1}})</h4>
+          <div class="save" v-for="(item,index) in recordB" :key="index" @click="editsave(index)">
+            <span class="orange" v-show="index!=0">
+              {{item.title}}
+              <i class="el-icon-edit"></i>
+            </span>
+            <p>{{item.departDate}}</p>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -37,18 +44,35 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-      content: "",
-      title: "",
-      city: ""
+      form: {
+        content: "",
+        title: "",
+        city: "",
+        departDate: ""
+      },
+      record: [],
+      recordB: [],
+      // 城市列表
+      departData: []
     };
   },
+  // watch: {
+  //   recordB(newv,old){
+  //     this.recordB=newv
+  //   }
+  // },
   methods: {
     // 新增文章
     post() {
-      if (this.content == "" && this.title == "" && this.city == "") {
+      if (
+        this.form.content == "" &&
+        this.form.title == "" &&
+        this.form.city == ""
+      ) {
         this.$message({
           message: "请填写完整",
           type: "warning"
@@ -63,18 +87,47 @@ export default {
           Authorization: `Bearer ` + this.$store.state.user.userInfo.token
         },
         data: {
-          content: this.content,
-          title: this.title,
-          city: this.city
+          content: this.form.content,
+          title: this.form.title,
+          city: this.form.city
         }
       }).then(res => {
-        console.log(123);
-
         this.$message({
           message: "恭喜你，这是一条成功消息",
           type: "success"
         });
+        this.$router.push({
+          path: "/post"
+        });
       });
+    },
+    // 保存
+    save() {
+      let dd = new Date();
+      this.form.departDate = moment(dd).format("YYYY-MM-DD");
+      this.recordB.push(this.form);
+      localStorage.setItem("save", JSON.stringify(this.recordB));
+      // (this.form.content = ""), (this.form.title = ""), (this.form.city = "");
+      this.$message({
+        message: "保存成功",
+        type: "success"
+      });
+    },
+    // 编辑保存
+    editsave(index) {
+      console.log(index);
+
+      this.form = this.recordB[index];
+      console.log(this.recordB);
+    }
+  },
+
+  mounted() {
+    if (localStorage.getItem("save")) {
+      this.recordB = JSON.parse(localStorage.getItem("save"));
+    } else {
+      localStorage.setItem("save", 0);
+      this.recordB.push(JSON.parse(localStorage.getItem("save")));
     }
   }
 };
@@ -138,5 +191,20 @@ h2 {
 }
 .caogaoxiang {
   margin-left: 70px;
+}
+.save {
+  height: 100%;
+  width: 100%;
+  margin: 5px 0px;
+  border-bottom: 1px solid skyblue;
+  p {
+    margin: 4px 0px;
+    color: #999;
+    font-size: 14px;
+  }
+}
+.orange:hover {
+  color: orange;
+  cursor: pointer;
 }
 </style>
