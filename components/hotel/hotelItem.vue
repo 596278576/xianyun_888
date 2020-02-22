@@ -3,22 +3,22 @@
     <el-row type="flex" :gutter="20">
       <el-col :span="8" class="hotelPhoto">
         <img
-          src="https://p1.meituan.net/deal/__28971196__1332429.jpg%40700w_700h_0e_1l%7Cwatermark%3D1%26%26r%3D1%26p%3D9%26x%3D2%26y%3D2%26relative%3D1%26o%3D20"
+          :src="data.photos"
           alt="锦江之星(上海锦江乐园店)"
         />
       </el-col>
       <el-col :span="10">
-          <h4>锦江之星(上海锦江乐园店)</h4>
-          <span class="spell">jin jiang zhi xing (shang hai jin jiang le yuan dian)</span>
+          <h4>{{data.name}}</h4>
+          <span class="spell">{{data.alias}}</span>
           <span><i class="iconfont iconhuangguan orange"></i></span>
-          <span class="hotelType">舒适型</span>
+          <span class="hotelType">{{data.hoteltype.name}}</span>
           <el-row type="flex" :gutter="10" style="margin:10px 0;">
               <el-col :span="10">
-                  <el-rate v-model="stars"
+                  <el-rate v-model="data.stars"
                    disabled
                     show-score
                     text-color="#ff9900"
-                     :score-template="stars+'分'"></el-rate>
+                     :score-template="data.stars+'分'"></el-rate>
               </el-col>
               <el-col :span="7">
                   <span class="orange">66</span>&nbsp;条评价
@@ -29,15 +29,15 @@
           </el-row>
           <el-row>
               <span class="location">
-                  <i class="iconfont iconlocation"></i>位于: 川沙镇翔川路525弄9号楼(翔川家园旁边，靠近艳阳路)
+                  <i class="iconfont iconlocation"></i>位于: {{data.address}}
               </span>
           </el-row>
       </el-col>
-      <el-col :span="6">
-          <el-row type="flex" class="chances">
-              <el-col :span="12" class="company"><span>携程</span></el-col>
+      <el-col :span="6" class="chances">
+          <el-row type="flex" class="chancesItem" v-for="(item,index) in data.products" :key="index">
+              <el-col :span="12" class="company"><span>{{item.name}}</span></el-col>
               <el-col :span="12" class="perprice">
-                  <span class="orange">￥265</span>起
+                  <span class="orange">￥{{item.price}}</span>起
                   <i class="el-icon-arrow-right"></i>
               </el-col>
           </el-row>
@@ -50,7 +50,13 @@
 export default {
     data () {
         return {
-            stars:4.5
+            
+        }
+    },
+    props:{
+        data:{
+            type:Object,
+            default:{}
         }
     }
 };
@@ -83,6 +89,7 @@ export default {
   }
   .chances {
       margin-top: 20px;
+      .chancesItem {
       padding: 0 10px;
       border-bottom: 1px solid #ddd;
       .company,
@@ -91,6 +98,7 @@ export default {
         font-size: 14px;
         color: #666;
       }
+  }
   }
 }
 .orange {

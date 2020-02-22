@@ -15,7 +15,7 @@
       </el-col>
       <!-- 日期选择器 -->
       <el-date-picker
-        v-model="value"
+        v-model="checkDate"
         type="daterange"
         range-separator="-"
         start-placeholder="入住日期"
@@ -104,85 +104,16 @@
         <Map></Map>
       </el-col>
     </el-row>
-    <!-- 过滤器 -->
-    <el-row type="flex" class="hotelFilter">
-      <!-- 价格 -->
-      <el-col :span="8" class="hotelFilter-price">
-        <el-row type="flex" justify="space-between">
-          <el-col>价格</el-col>
-          <el-col>0-4000</el-col>
-        </el-row>
-        <el-slider v-model="budget" :min="0" :max="4000"></el-slider>
-      </el-col>
-      <!-- 酒店等级 -->
-      <el-col :span="6" class="hotelFilter-item">
-        <el-row>酒店等级</el-row>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            不限
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.levels" :key="index">
-              <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-      <!-- 酒店类型 -->
-      <el-col :span="6" class="hotelFilter-item">
-        <el-row>酒店类型</el-row>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            不限
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.types" :key="index">
-              <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-      <!-- 酒店设施 -->
-      <el-col :span="6" class="hotelFilter-item">
-        <el-row>酒店设施</el-row>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            不限
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.assets" :key="index">
-              <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-      <!-- 酒店品牌 -->
-      <el-col :span="6" class="hotelFilter-item">
-        <el-row>酒店品牌</el-row>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            不限
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.brands" :key="index">
-              <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-    </el-row>
+    <!-- 过滤条件 -->
+    <HotelsFilters></HotelsFilters>
     <!-- 搜索结果 -->
-    <HotelItem></HotelItem>
+    <HotelItem v-for="(item,index) in hotelsData" :key="index" :data='item'></HotelItem>
     <!-- 分页 -->
     <el-row type="flex" justify="end" style="padding:20px 0 40px;">
       <el-pagination
         small
         layout="prev, pager, next"
-        :total="500"
+        :total="total"
         :pager-count="5"
         prev-text="< 上一页"
         next-text="下一页  >"
@@ -193,23 +124,22 @@
 
 <script>
 import Map from "@/components/hotel/map";
+import HotelsFilters from '@/components/hotel/hotelsFilters'
 import HotelItem from "@/components/hotel/hotelItem";
 export default {
   data() {
     return {
       // 搜索城市
       cityName:'',
-      // 酒店选项
-      options:{
-        levels:[],    // 酒店等级
-        types:[],     // 酒店类型
-        assets:[],    // 酒店设施
-        brands:[]     // 酒店品牌
-      }
+      // 选择日期
+      checkDate:'',
+      hotelsData:[],
+      total:0
     };
   },
   components: {
     Map,
+    HotelsFilters,
     HotelItem
   },
   mounted(){
@@ -218,7 +148,23 @@ export default {
     }).then(res=>{
       // console.log(res)
       this.options=res.data.data
-    })
+    });
+    this.getList()
+  },
+  methods:{
+    getList(){
+      // 请求酒店列表数据
+      this.$axios({
+        url:'/hotels',
+        params:this.$route.query
+      }).then(res=>{
+        console.log(res)
+        // 前十条数据
+        this.hotelsData=res.data.data
+        // 总条数
+        this.total=this.hotelsData.total
+      })
+    }
   }
 };
 </script>
@@ -235,23 +181,7 @@ export default {
   width: 100%;
   margin-bottom: 20px;
 }
-.hotelFilter {
-  width: 100%;
-  border: 1px solid #ddd;
-  padding: 5px 20px;
-  margin: 25px 0;
-  .hotelFilter-price,
-  .hotelFilter-item {
-    padding: 5px 20px;
-  }
-  .hotelFilter-item {
-    border-left: 1px solid #ddd;
-  }
-  /deep/.dropdown-link-text {
-    display: block;
-    width: 100%;
-  }
-}
+
 /deep/.el-pagination .btn-prev,
 /deep/.el-pagination .btn-next {
   border: 1px solid #ccc;
