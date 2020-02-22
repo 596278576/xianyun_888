@@ -1,10 +1,14 @@
 export const state = () => {
     return {
-        search:''
+        search:'',
+        editorconter:[]
     }
 }
 export let mutations={
     setSearch(state,data){
         state.search=data
+    },
+    saveconter(state,data){
+        state.editorconter.push(data)
     }
 }
