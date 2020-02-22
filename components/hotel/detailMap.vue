@@ -43,7 +43,7 @@ export default {
     }, 100);
 
     var url =
-      "https://webapi.amap.com/maps?v=1.4.15&key=ccfe0710919fd363dbfb8d9b863a8519&callback=onLoad&plugin=AMap.PlaceSearch";
+      "https://webapi.amap.com/maps?v=1.4.15&key=	66ce04573974d72f4a06b0d17dc9641a&callback=onLoad&plugin=AMap.PlaceSearch";
     var jsapi = document.createElement("script");
     jsapi.charset = "utf-8";
     jsapi.src = url;
@@ -58,7 +58,7 @@ export default {
     mapInit() {
       window.onLoad = () => {
         this.map = new AMap.Map("container", {
-          center: this.centerInfo,
+          // center: this.centerInfo,
           zoom: 14, //初始地图级别
           resizeEnable: true
         });
@@ -71,7 +71,7 @@ export default {
         var placeSearch = new AMap.PlaceSearch({
           pageSize: 10, // 单页显示结果条数
           pageIndex: 1, // 页码
-          city: this.data.city.name, // 兴趣点城市
+          // city: this.data.city.name, // 兴趣点城市
           citylimit: true, //是否强制限制在设置的城市内搜索
           map: this.map, // 展现结果的地图实例
           panel: "panel", // 结果列表将在此容器中进行展示。
@@ -90,7 +90,7 @@ export default {
         var placeSearch = new AMap.PlaceSearch({
           pageSize: 10, // 单页显示结果条数
           pageIndex: 1, // 页码
-          city: this.data.city.name, // 兴趣点城市
+          // city: this.data.city.name, // 兴趣点城市
           citylimit: true, //是否强制限制在设置的城市内搜索
           map: this.map, // 展现结果的地图实例
           panel: "traffic", // 结果列表将在此容器中进行展示。

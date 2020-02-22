@@ -49,7 +49,7 @@
     </div>
 
     <!-- 地图 -->
-    <!-- <DetailMap :data="Detail" /> -->
+    <DetailMap :data="Detail" />
 
     <!-- 酒店基本信息 -->
     <DetailInformation :data="Detail" />
@@ -67,11 +67,11 @@ import UserReview from "@/components/hotel/userReview";
 // 酒店信息
 import DetailInformation from "@/components/hotel/detailInformation";
 // 酒店地图
-// import DetailMap from "@/components/hotel/detailMap";
+import DetailMap from "@/components/hotel/detailMap";
 export default {
   components: {
     HotelImage,
-    // DetailMap,
+    DetailMap,
     DetailInformation,
     UserReview
   },

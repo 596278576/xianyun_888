@@ -6,8 +6,9 @@
         <p class="create-desc">分享你的个人游记，让更多人看到哦</p>
 
         <el-input v-model="title" placeholder="请输入标题"></el-input>
+
         <div class="editor-height">
-          <rich-editor />
+          <rich-editor @input="editor"/>
         </div>
 
         <el-row>
@@ -68,13 +69,17 @@ export default {
           city: this.city
         }
       }).then(res => {
-        console.log(123);
-
+        // console.log(123);
+        console.log(res);
         this.$message({
           message: "恭喜你，这是一条成功消息",
           type: "success"
         });
       });
+    },
+    //富文本编辑器传过来的内容
+    editor(data){
+      this.content=data
     }
   }
 };
