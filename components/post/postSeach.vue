@@ -33,6 +33,9 @@ export default {
     "$store.state.post.search"(){
       this.city=this.$store.state.post.search
     }
+  },
+  mounted(){
+    this.city=this.$store.state.post.search
   }
 };
 </script>

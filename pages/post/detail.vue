@@ -4,25 +4,38 @@
       <!-- 左侧 -->
       <div class="main clearfix">
         <!-- 文章详情 -->
-        <articleDetail />
+        <!-- 文章不存在 -->
+        <div class="noarticle" v-if="!articledata">
+          <div>404！</div>
+          <div>您的文章被妖怪抓走了</div>
+        </div>
+        <!-- 文章存在 -->
+        <articleDetail v-if="articledata" :articledata="articledata" />
         <!-- 用户输入 -->
         <comments @addComments="addComments" :commentTitle="'评论'" />
         <div style="height:20px"></div>
+        <!-- 没有数据的时候 -->
+        <div class="nodata" v-if="total == 0">暂无数据</div>
         <!-- 展示评论 -->
         <commentShow v-for="(item,index) in commnetsdata" :key="index" :commnetsdata="item" />
+        <div class="block" v-if="total !== 0">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[2,4,6,8]"
+            :page-size="commnetsdata.length"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
+        </div>
       </div>
-
       <!-- 右侧 -->
       <!-- 相关攻略 -->
       <div class="right">
-        <div class="someRecommend">
-          相关攻略
-        </div>
-        <hr>
-        <recommend 
-        v-for="(item,index) in recommendData"
-        :key="index"
-         :recommendData="item"/>
+        <div class="someRecommend">相关攻略</div>
+        <hr />
+        <recommend v-for="(item,index) in recommendData" :key="index" :recommendData="item" />
       </div>
 
       <!-- <div class="about">相关攻略</div> -->
@@ -46,42 +59,88 @@ export default {
         }
       ],
       //推荐文章的数据
-      recommendData:[]
+      recommendData: [],
+      total: 0,
+      //当前页面
+      currentPage: 1,
+      //开始数据
+      start: 0,
+      // 条数
+      limit: 2,
+      // 文章数据
+      articledata: {
+        comments: []
+      }
     };
   },
   mounted() {
+    //加载评论
     this.init();
-     //加载攻略
-     this.$axios({
-       url:'/posts/recommend',
-       params:{
-         id:this.$route.query.id
-       }
-     }).then(res=>{
-      //  console.log(res);
-       this.recommendData = res.data.data
-     })
+    // 加载文章
+    this.articleinit();
+    //加载攻略
+    this.initrecommend();
   },
   methods: {
+    //改变每页显示条数
+    handleSizeChange(val) {
+      this.limit = val;
+
+      this.init();
+    },
+    // 改变当前页面
+    handleCurrentChange(val) {
+      this.start = (val - 1) * this.limit;
+      this.init();
+    },
     // 添加评论时
     addComments() {
       this.init();
     },
+    //加载攻略
+    initrecommend() {
+      this.$axios({
+        url: "/posts/recommend",
+        params: {
+          id: this.$route.query.id
+        }
+      }).then(res => {
+        // console.log(res);
+        this.recommendData = res.data.data;
+      });
+    },
+    //加载文章
+    articleinit() {
+      this.$axios({
+        url: "/posts",
+        params: {
+          id: this.$route.query.id
+        }
+      }).then(res => {
+        // 若该id下有文章
+        if (res.data.data[0]) {
+          // 获取文章相关信息
+          this.articledata = res.data.data[0];
+        } else {
+          this.articledata = false;
+        }
+      });
+    },
+    //加载评论
     init() {
       // 加载评论
       this.$axios({
         url: "/posts/comments",
         params: {
           post: this.$route.query.id,
-          _start: 0,
-          _limit: 5
+          _start: this.start,
+          _limit: this.limit
         }
       }).then(res => {
-        // console.log(res);
+        console.log(res);
         this.commnetsdata = res.data.data;
+        this.total = res.data.total;
       });
-     
-
     }
   },
   components: {
@@ -93,11 +152,30 @@ export default {
     commentShow,
     //相关推荐
     recommend
+  },
+  watch: {
+    $route() {
+      //加载评论
+      this.init();
+      // 加载文章
+      this.articleinit();
+      //加载攻略
+      this.initrecommend();
+      console.log(123);
+    }
   }
 };
 </script>
 
 <style scoped>
+/* 无文章数据时 */
+.noarticle {
+  font-size: 60px;
+  color: #ccc;
+  height: 400px;
+  line-height: 150px;
+  text-align: center;
+}
 .main {
   /* overflow: hidden; */
 }
@@ -113,10 +191,16 @@ export default {
   clear: both;
   display: block;
 }
-.someRecommend{
+.someRecommend {
   margin-bottom: 20px;
 }
-.right{
-  width:262px;
+.right {
+  width: 262px;
+}
+.nodata {
+  font-size: 24px;
+  color: #ccc;
+  font-weight: blod;
+  text-align: center;
 }
 </style>
