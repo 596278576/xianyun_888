@@ -38,10 +38,11 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "@/plugins/element-ui",
-    { src: "@/plugins/localStorage", ssr: false },
+    '@/plugins/element-ui',
+    { src: '@/plugins/localStorage', ssr: false },
     "@/plugins/axios",
-    { src: '~/plugins/rich-editor', mode: 'client' }
+    { src: '~/plugins/vue2editor.js', mode: 'client' },
+    { src: '~/plugins/ckeditor', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules
