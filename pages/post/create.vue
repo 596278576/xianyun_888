@@ -5,16 +5,9 @@
         <h2>发表新攻略</h2>
         <p class="create-desc">分享你的个人游记，让更多人看到哦</p>
 
-<<<<<<< HEAD
-        <el-input v-model="title" placeholder="请输入标题"></el-input>
-
-        <div class="editor-height">
-          <rich-editor @input="editor"/>
-=======
         <el-input v-model="form.title" placeholder="请输入标题"></el-input>
         <div class="editor-height">
           <rich-editor v-model="form.content" />
->>>>>>> 01de65a16ed08b1421571adaae8229d030bb215b
         </div>
 
         <el-row>
@@ -99,11 +92,6 @@ export default {
           city: this.form.city
         }
       }).then(res => {
-<<<<<<< HEAD
-        // console.log(123);
-        console.log(res);
-=======
->>>>>>> 01de65a16ed08b1421571adaae8229d030bb215b
         this.$message({
           message: "恭喜你，这是一条成功消息",
           type: "success"
@@ -125,11 +113,6 @@ export default {
         type: "success"
       });
     },
-<<<<<<< HEAD
-    //富文本编辑器传过来的内容
-    editor(data){
-      this.content=data
-=======
     // 编辑保存
     editsave(index) {
       console.log(index);
@@ -145,7 +128,6 @@ export default {
     } else {
       localStorage.setItem("save", 0);
       this.recordB.push(JSON.parse(localStorage.getItem("save")));
->>>>>>> 01de65a16ed08b1421571adaae8229d030bb215b
     }
   }
 };

@@ -4,5 +4,7 @@ export const state=()=>{
     }
 }
 export const mutations= {
-    
+    setCity(state,data){
+        state.cityInfo=data
+    }
 }
