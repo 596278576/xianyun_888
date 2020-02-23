@@ -15,7 +15,11 @@
           {{time}}
         </div>
       </div>
-       <commentShow v-if="commnetsdata.parent" :commnetsdata="commnetsdata.parent" />
+       <commentShow 
+       v-if="commnetsdata.parent" 
+       :commnetsdata="commnetsdata.parent"
+       @addReplay="addReplay"
+        />
       <!-- 显示评论的内容-->
       <div class="userIn">
         <div>{{commnetsdata.content}}</div>
@@ -35,6 +39,7 @@
       v-if="showReply" 
       :commentTitle="`@`+commnetsdata.account.nickname"
       :fllow="commnetsdata.id"
+      @addReplay="addReplay"
       />
     </div>
   </div>
@@ -66,6 +71,11 @@ export default {
     ReplayClick(){
       this.showReply = !this.showReply
       
+    },
+    addReplay(event){
+      this.showReply = false
+      console.log(`addReplay`);
+      this.$emit('addReplay',event)
     }
   }
 };

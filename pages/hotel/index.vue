@@ -4,10 +4,11 @@
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>酒店</el-breadcrumb-item>
-        <el-breadcrumb-item>{{cityName}}酒店预订</el-breadcrumb-item>
+        <el-breadcrumb-item>酒店预订</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 搜索栏 -->
+<<<<<<< HEAD
     <el-form :inline="true" class="search-form-content" ref="form">
       <el-form-item>
         <el-autocomplete
@@ -77,14 +78,25 @@
       <el-button type="primary">查看价格</el-button>
       </el-form-item>
     </el-form>
+=======
+    <SearchForm></SearchForm>
+>>>>>>> 32c6cf4a29c4b0765147797d92c19280e9fdb99d
     <!-- 定位 -->
-    <el-row type="flex" :gutter="5">
+    <el-row type="flex" :gutter="5" class="location">
       <!-- 区域 -->
       <el-col :span="14">
         <el-row type="flex">
           <el-col :span="3">
             <span>区域：</span>
-            <!-- style=visibility:hidden -->
+          </el-col>
+          <el-col :span="24">
+            <!-- <div>
+              <a class="area"
+              v-for="(item,index) in hotelsData[1].scenic" 
+              :key="index"
+              >{{item.name}}</a>
+            </div> -->
+            <a href="#"><i class="el-icon-d-arrow-right orange arrow-down"></i>等{{hotelsData[0].scenic.length}}个区域</a>
           </el-col>
         </el-row>
         <!-- 均价 -->
@@ -114,7 +126,7 @@
       </el-col>
       <!-- 地图 -->
       <el-col :span="10">
-        <Map></Map>
+        <Map :data='hotelsData'></Map>
       </el-col>
     </el-row>
     <!-- 过滤条件 -->
@@ -124,52 +136,55 @@
     <!-- 分页 -->
     <el-row type="flex" justify="end" style="padding:20px 0 40px;">
       <el-pagination
-        small
-        layout="prev, pager, next"
-        :total="total"
-        :pager-count="5"
-        :current-page="pageIndex"
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        prev-text="< 上一页"
-        next-text="下一页  >"
-      ></el-pagination>
+        :current-page="pageIndex"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+        </el-pagination>
     </el-row>
   </div>
 </template>
 
 <script>
 import Map from "@/components/hotel/map";
+import SearchForm from "@/components/hotel/searchForm";
 import HotelsFilters from '@/components/hotel/hotelsFilters'
 import HotelItem from "@/components/hotel/hotelItem";
 export default {
   data() {
-    return {
-      form:{
-        // 搜索城市
-      cityName:'',
-      // 选择日期
-      checkDate:'',
-      },
+    return {   
       // 酒店选项
       options:{},
       hotelsData:[],
       total:0,
-      pageIndex:1     
+      pageIndex:1,
+      pageSize:10, 
+      form:{
+        city:'73',
+        enterTime:'',
+        leftTime:'',
+        _limit:10,
+        _start:0
+      }
     };
   },
   components: {
     Map,
+    SearchForm,
     HotelsFilters,
     HotelItem
   },
   mounted(){
+    this.getList();
     this.$axios({
       url:'/hotels/options'
     }).then(res=>{
       // console.log(res)
       this.options=res.data.data
     });
-    this.getList()
   },
   // 在当前路由改变，但是该组件被复用时调用
     // to: 要跳转的页面路由对象
@@ -190,7 +205,7 @@ export default {
       // 请求酒店列表数据
       this.$axios({
         url:'/hotels',
-        params:this.$route.query
+        params:this.form
       }).then(res=>{
         console.log(res)
         // 前十条数据
@@ -198,6 +213,9 @@ export default {
         // 总条数
         this.total=this.hotelsData.total
       })
+    },
+    handleSizeChange(index){
+      this.pageSize = index;
     },
     handleCurrentChange(index){
       this.pageIndex=index
@@ -215,11 +233,17 @@ export default {
 .breadcrumb {
   padding: 20px 0;
 }
-.checkPrice {
-  width: 100%;
-  margin-bottom: 20px;
+.location {
+  font-size: 14px;
+  color: #666;
 }
-
+.area {
+  margin-right: 14px;
+  padding: 0 2px
+}
+.arrow-down {
+  transform: rotate(90deg);
+}
 /deep/.el-pagination .btn-prev,
 /deep/.el-pagination .btn-next {
   border: 1px solid #ccc;

@@ -62,7 +62,12 @@
             不限
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown" class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
+          <el-dropdown-menu 
+          slot="dropdown" 
+          class="infinite-list" 
+          v-infinite-scroll="load" 
+          style="overflow:auto"
+          >
             <el-dropdown-item v-for="(item,index) in data.brands" :key="index" class="infinite-list-item">
               <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
             </el-dropdown-item>
