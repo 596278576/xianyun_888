@@ -8,7 +8,7 @@ export default {
     return {
       map: "",
       marker:'',
-      cityinfo:'',
+      cityName:'',
       citybounds:{}
     };
   },
@@ -34,7 +34,7 @@ export default {
               // 查询成功，result即为当前所在城市信息
               console.log(result);
               if(result&&result.city&&result.bounds){
-                this.cityinfo=result.city;
+                this.cityName=result.city;
                 this.citybounds=result.bounds
               }
             }
