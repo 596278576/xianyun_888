@@ -81,13 +81,40 @@
 export default {
   data() {
     return {
-      form: {
-        // 搜索城市
-        cityName: "",
-        // 选择日期
-        checkDate: ""
+      form:{
+        city:'73',
+        enterTime:'',
+        leftTime:'',
+        _limit:10,
+        _start:0,
+        cityName:''
       }
     };
+  },
+  methods:{
+    // 封装出发城市和到达城市的请求函数
+        querySearch(value){
+            // 根据value请求城市列表
+            return this.$axios({
+                url: "/airs/city",
+                // axios的get请求的参数使用params, 如果是post请求使用data
+                params: {
+                    name: value
+                }
+            }).then(res => {
+                // data是数组，但是数组中的对象没有value值
+                const {data} = res.data;
+
+                // 给data中没一项都添加一个value属性 (forEach,map)
+                const newData = data.map(v => {
+                    v.value = v.name.replace("市", "");
+                    // map返回的数组由return组成的
+                    return v;
+                })
+
+                return newData;
+            })   
+        },
   }
 };
 </script>

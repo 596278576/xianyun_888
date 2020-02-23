@@ -4,7 +4,7 @@
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>酒店</el-breadcrumb-item>
-        <el-breadcrumb-item>{{cityName}}酒店预订</el-breadcrumb-item>
+        <el-breadcrumb-item>酒店预订</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 搜索栏 -->
@@ -18,10 +18,13 @@
             <span>区域：</span>
           </el-col>
           <el-col :span="24">
-            <div>
-              <span>松江镇</span>
-            </div>
-            <a href="#"><i class="el-icon-d-arrow-right orange arrow-down"></i>等189个区域</a>
+            <!-- <div>
+              <a class="area"
+              v-for="(item,index) in hotelsData[1].scenic" 
+              :key="index"
+              >{{item.name}}</a>
+            </div> -->
+            <a href="#"><i class="el-icon-d-arrow-right orange arrow-down"></i>等{{hotelsData[0].scenic.length}}个区域</a>
           </el-col>
         </el-row>
         <!-- 均价 -->
@@ -80,15 +83,20 @@ import HotelsFilters from '@/components/hotel/hotelsFilters'
 import HotelItem from "@/components/hotel/hotelItem";
 export default {
   data() {
-    return {
-      form:{},     
+    return {   
       // 酒店选项
       options:{},
       hotelsData:[],
       total:0,
       pageIndex:1,
-      pageSize:10,
-      cityName:'070'   //城市ID  
+      pageSize:10, 
+      form:{
+        city:'73',
+        enterTime:'',
+        leftTime:'',
+        _limit:10,
+        _start:0
+      }
     };
   },
   components: {
@@ -124,8 +132,8 @@ export default {
     getList(){
       // 请求酒店列表数据
       this.$axios({
-        url:`/hotels?cityName=`+this.city,
-        params:this.$route.query
+        url:'/hotels',
+        params:this.form
       }).then(res=>{
         console.log(res)
         // 前十条数据
@@ -156,6 +164,10 @@ export default {
 .location {
   font-size: 14px;
   color: #666;
+}
+.area {
+  margin-right: 14px;
+  padding: 0 2px
 }
 .arrow-down {
   transform: rotate(90deg);
