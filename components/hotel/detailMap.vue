@@ -22,28 +22,20 @@ export default {
     data: {
       type: Object,
       default: {
-        location: {}
+        location: {},
+        list: []
       }
     }
   },
   data() {
     return {
-      centerInfo: [],
       editableTabsValue: "1",
       map: ""
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.centerInfo = [
-        this.data.location.longitude,
-        this.data.location.latitude
-      ];
-      console.log(this.centerInfo);
-    }, 100);
-
     var url =
-      "https://webapi.amap.com/maps?v=1.4.15&key=ccfe0710919fd363dbfb8d9b863a8519&callback=onLoad&plugin=AMap.PlaceSearch";
+      "https://webapi.amap.com/maps?v=1.4.15&key=7bc14854874f66a0277e73e3ff35da35&callback=onLoad&plugin=AMap.PlaceSearch";
     var jsapi = document.createElement("script");
     jsapi.charset = "utf-8";
     jsapi.src = url;
@@ -58,7 +50,7 @@ export default {
     mapInit() {
       window.onLoad = () => {
         this.map = new AMap.Map("container", {
-          center: this.centerInfo,
+          // center: this.centerInfo,
           zoom: 14, //初始地图级别
           resizeEnable: true
         });
@@ -77,11 +69,17 @@ export default {
           panel: "panel", // 结果列表将在此容器中进行展示。
           autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
         });
+
+        let cpoint = [
+          this.data.location.longitude,
+          this.data.location.latitude
+        ]; //中心点坐标
         //关键字查询
-        placeSearch.searchNearBy("风景", this.centerInfo, 5000, function(
-          status,
-          result
-        ) {});
+        // undefrfinded----箭头函数
+        placeSearch.searchNearBy("风景", cpoint, 3000, (status, result) => {
+          console.log(result);
+          this.list = result.poiList.pois;
+        });
       });
     },
     searchTraffic() {
@@ -96,11 +94,15 @@ export default {
           panel: "traffic", // 结果列表将在此容器中进行展示。
           autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
         });
+        let cpoint = [
+          this.data.location.longitude,
+          this.data.location.latitude
+        ]; //中心点坐标
         //关键字查询
-        placeSearch.searchNearBy("公交地铁", this.centerInfo, 5000, function(
-          status,
-          result
-        ) {});
+        placeSearch.searchNearBy("交通", cpoint, 3000, (status, result) => {
+          console.log(result);
+          this.list = result.poiList.pois;
+        });
       });
     },
 
