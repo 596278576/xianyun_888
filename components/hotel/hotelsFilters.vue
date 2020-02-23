@@ -18,7 +18,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.levels" :key="index">
+            <el-dropdown-item v-for="(item,index) in data.levels" :key="index">
               <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -33,7 +33,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.types" :key="index">
+            <el-dropdown-item v-for="(item,index) in data.types" :key="index">
               <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -48,7 +48,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.assets" :key="index">
+            <el-dropdown-item v-for="(item,index) in data.assets" :key="index">
               <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -62,8 +62,8 @@
             不限
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in options.brands" :key="index">
+          <el-dropdown-menu slot="dropdown" class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
+            <el-dropdown-item v-for="(item,index) in data.brands" :key="index" class="infinite-list-item">
               <el-checkbox v-model="checked">{{item.name}}</el-checkbox>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -77,14 +77,20 @@
 export default {
    data () {
        return {
-            // 酒店选项
-      options:{
-        levels:[],    // 酒店等级
-        types:[],     // 酒店类型
-        assets:[],    // 酒店设施
-        brands:[]     // 酒店品牌
-      }
+      //       // 酒店选项
+      // options:{
+      //   levels:[],    // 酒店等级
+      //   types:[],     // 酒店类型
+      //   assets:[],    // 酒店设施
+      //   brands:[]     // 酒店品牌
+      // }
        }
+   },
+   props:{
+     data:{
+       type:Object,
+       default:{}
+     }
    }
 }
 </script>
