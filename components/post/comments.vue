@@ -56,12 +56,12 @@ export default {
       console.log(this.pics);
     },
     //点击提交
-    commitComment() {
+    commitComment(event) {
       if(!this.$refs.commentcontent.innerText){
         this.$message.error('评论不能为空')
         return
       }
-      // 若是用于回复
+      // 若是用于评论
       if (this.commentTitle === "评论") {
         this.$axios({
           url: "/comments",
@@ -80,7 +80,7 @@ export default {
           this.$emit("addComments");
         });
       }
-      //若是用于评论 
+      //若是用于回复 
       else {
         this.$axios({
           url: "/comments",
@@ -94,10 +94,10 @@ export default {
           headers: {
             // 'Content-Type':'application/json',
             Authorization: "Bearer " + this.$store.state.user.userInfo.token
-          }
+          } 
         }).then(res => {
           this.$message.success("回复成功");
-          this.$emit("addComments");
+          this.$emit("addReplay",event);
         });
       }
 

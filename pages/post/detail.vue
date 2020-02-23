@@ -17,7 +17,11 @@
         <!-- 没有数据的时候 -->
         <div class="nodata" v-if="total == 0">暂无数据</div>
         <!-- 展示评论 -->
-        <commentShow v-for="(item,index) in commnetsdata" :key="index" :commnetsdata="item" />
+        <commentShow 
+        v-for="(item,index) in commnetsdata" 
+        :key="index" 
+        :commnetsdata="item" 
+        @addReplay="addComments"/>
         <div class="block" v-if="total !== 0">
           <el-pagination
             @size-change="handleSizeChange"
@@ -95,6 +99,7 @@ export default {
     },
     // 添加评论时
     addComments() {
+      console.log(123);
       this.init();
     },
     //加载攻略
@@ -137,7 +142,7 @@ export default {
           _limit: this.limit
         }
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.commnetsdata = res.data.data;
         this.total = res.data.total;
       });
