@@ -60,7 +60,7 @@
             class="inline-input"
             size="mini"
             v-model="state1"
-                placeholder="请选择"
+            placeholder="请选择"
             :fetch-suggestions="querySearch"
             @select="handleSelectChild"
             readonly="readonly"
