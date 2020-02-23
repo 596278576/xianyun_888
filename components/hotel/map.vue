@@ -42,7 +42,7 @@ export default {
               if(result&&result.city&&result.bounds){
                 this.cityName=result.city;
                 this.citybounds=result.bounds;
-              console.log(this.citybounds);
+              console.log(result);
               }
               this.$store.commit("hotel/setCity", this.citybounds);
             }

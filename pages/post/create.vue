@@ -92,6 +92,8 @@ export default {
           city: this.form.city
         }
       }).then(res => {
+        console.log(res);
+        
         this.$message({
           message: "恭喜你，这是一条成功消息",
           type: "success"

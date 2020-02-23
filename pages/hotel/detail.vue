@@ -79,9 +79,11 @@ export default {
     return {
       id: 185,
       Detail: {
+        hotellevel: {}, //酒店星级
         hotelbrand: {}, //酒店品牌
         location: {}, //坐标
-        scores: {} //评分
+        scores: {}, //评分
+        list: [] //接收的中心坐标
       }
     };
   },
@@ -89,7 +91,8 @@ export default {
     this.$axios({
       url: `/hotels?id=` + this.id
     }).then(res => {
-      console.log(res.data);
+      console.log(res.data.data);
+      this.Detail = res.data.data[0];
     });
   }
 };

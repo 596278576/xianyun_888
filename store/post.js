@@ -1,6 +1,7 @@
 export const state = () => {
     return {
         search:'',
+        editorconter:[]
     }
 }
 export let mutations={
