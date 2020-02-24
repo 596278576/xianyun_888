@@ -21,7 +21,7 @@
                      :score-template="data.stars+'分'"></el-rate>
               </el-col>
               <el-col :span="7">
-                  <span class="orange">{{data.common_remarks}}</span>&nbsp;条评价
+                  <span class="orange">{{data.all_remarks}}</span>&nbsp;条评价
               </el-col>
               <el-col :span="7">
                   <span class="orange">81</span>&nbsp;篇游记

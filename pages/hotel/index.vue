@@ -103,9 +103,10 @@
       </el-col>
     </el-row>
     <!-- 过滤条件 -->
-    <HotelsFilters :data="options" @searchHotel="searchHotel"></HotelsFilters>
+    <HotelsFilters :data="options" @filtersData="filtersData"></HotelsFilters>
     <!-- 搜索结果 -->
-    <HotelItem v-for="(item,index) in hotelsData" :key="index" :data="item"></HotelItem>
+    <HotelItem v-for="(item,index) in hotelsData" :key="index" :data="item"
+    @click.native="$router.push({path:'/hotel/detail',query:{id:item.id}})"></HotelItem>
     <!-- 分页 -->
     <el-row type="flex" justify="end" style="padding:20px 0 40px;">
       <el-pagination
@@ -129,8 +130,6 @@ import HotelItem from "@/components/hotel/hotelItem";
 export default {
   data() {
     return {
-      // 酒店选项
-      options: {},
       hotelsData: [],
       total: 0,
       pageIndex: 1,
@@ -158,12 +157,7 @@ export default {
   mounted() {
     this.getArea();
     this.getList();
-    this.$axios({
-      url: "/hotels/options"
-    }).then(res => {
-      // console.log(res)
-      this.options = res.data.data;
-    });
+    
   },
   // 在当前路由改变，但是该组件被复用时调用
   // to: 要跳转的页面路由对象
@@ -186,9 +180,16 @@ export default {
     // 从searchForm接受数据
     sendCity(val) {
       this.city = val;
-      // this.
+      this.getCityId()
     },
-
+    getCityId(){
+      this.getArea(this.city)
+    },
+    // 过滤
+    filtersData(data){
+      this.filters=data,
+      this.getList()
+    },
     getList() {
       let paramsArr = [];
 
@@ -202,6 +203,8 @@ export default {
         this.hotelsData = res.data.data;
         // 总条数
         this.total = this.hotelsData.total;
+
+        this.$store.commit('setHotelList',this.hotelsData)
       });
     },
     // 获取城市区域和id

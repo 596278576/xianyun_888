@@ -1,10 +1,11 @@
 export const state=()=>{
     return {
-
+        // 酒店详情
+        hotelDetail:[]
     }
 }
 export const mutations= {
-    setCity(state,data){
-        state.cityInfo=data
+    setHotelList(state,data){
+        state.hotelDetail=data
     }
 }
