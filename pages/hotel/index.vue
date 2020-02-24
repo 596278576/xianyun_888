@@ -86,7 +86,8 @@ export default {
     return {   
       // 酒店选项
       options:{},
-      hotelsData:[],
+      hotelsData:[
+      ],
       total:0,
       pageIndex:1,
       pageSize:10, 

@@ -1,7 +1,8 @@
 export const state = () => {
     return {
         search:'',
-        editorconter:[]
+        editorconter:[],
+        color:false
     }
 }
 export let mutations={
@@ -10,5 +11,8 @@ export let mutations={
     },
     saveconter(state,data){
         state.editorconter.push(data)
+    },
+    setColor(state,data){
+        state.color=data
     }
 }
