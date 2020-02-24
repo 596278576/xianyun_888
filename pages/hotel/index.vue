@@ -4,13 +4,13 @@
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>酒店</el-breadcrumb-item>
-        <el-breadcrumb-item>酒店预订</el-breadcrumb-item>
+        <el-breadcrumb-item>{{cityName}}酒店预订</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 搜索栏 -->
-    <SearchForm></SearchForm>
+    <SearchForm @sendCity='sendCity'></SearchForm>
     <!-- 定位 -->
-    <el-row type="flex" :gutter="5" class="location">
+    <el-row type="flex" :gutter="10" class="location">
       <!-- 区域 -->
       <el-col :span="14">
         <el-row type="flex">
@@ -18,13 +18,12 @@
             <span>区域：</span>
           </el-col>
           <el-col :span="24">
-            <!-- <div>
-              <a class="area"
-              v-for="(item,index) in hotelsData[1].scenic" 
-              :key="index"
-              >{{item.name}}</a>
-            </div> -->
-            <a href="#"><i class="el-icon-d-arrow-right orange arrow-down"></i>等{{hotelsData[0].scenic.length}}个区域</a>
+            <div id="clickArea" :class="{active:isShow}">
+              <a href="#" class="area"
+              v-for="(item,index) in cityArea.scenics" 
+              :key="index">{{item.name}}</a>           
+            </div>
+            <a href="#" @click="isShow=!isShow"><i class="el-icon-d-arrow-right orange arrow-down"></i>等{{this.cityArea.scenics.length}}个区域</a>
           </el-col>
         </el-row>
         <!-- 均价 -->
@@ -54,11 +53,11 @@
       </el-col>
       <!-- 地图 -->
       <el-col :span="10">
-        <Map :data='hotelsData'></Map>
+        <Map :data='hotelsData' @getLocation='getLocation'></Map>
       </el-col>
     </el-row>
     <!-- 过滤条件 -->
-    <HotelsFilters :data='options'></HotelsFilters>
+    <HotelsFilters :data='options' @searchHotel='searchHotel'></HotelsFilters>
     <!-- 搜索结果 -->
     <HotelItem v-for="(item,index) in hotelsData" :key="index" :data='item'></HotelItem>
     <!-- 分页 -->
@@ -90,13 +89,18 @@ export default {
       total:0,
       pageIndex:1,
       pageSize:10, 
+      cityArea:{
+        scenics:[]
+      },
+      isShow:true,
       form:{
         city:'73',
         enterTime:'',
         leftTime:'',
         _limit:10,
         _start:0
-      }
+      },
+      cityName:'上海市'
     };
   },
   components: {
@@ -106,6 +110,7 @@ export default {
     HotelItem
   },
   mounted(){
+    this.getArea();
     this.getList();
     this.$axios({
       url:'/hotels/options'
@@ -129,7 +134,18 @@ export default {
         this.getList();  
     },
   methods:{
+    getLocation(data){
+      this.city=data
+    },
+    // 从searchForm接受数据
+    sendCity(val){
+      this.city=val
+      // this.
+    },
+
     getList(){
+      let paramsArr=[]
+
       // 请求酒店列表数据
       this.$axios({
         url:'/hotels',
@@ -140,6 +156,21 @@ export default {
         this.hotelsData=res.data.data
         // 总条数
         this.total=this.hotelsData.total
+      })
+    },
+    // 获取城市区域和id
+    getArea(){
+      this.$axios({
+        url:'/cities',
+        params:{
+          name:this.cityName
+        }
+      }).then(res=>{
+        // console.log(res);
+        // 区域
+        this.cityArea=res.data.data[0];
+        // 城市id
+        this.form.city=res.data.data[0].id
       })
     },
     handleSizeChange(index){
@@ -165,6 +196,16 @@ export default {
   font-size: 14px;
   color: #666;
 }
+#clickArea {
+  a:hover {
+  color: #0094ff;
+  text-decoration: underline;
+  }
+}
+.active {
+  height: 40px;
+  overflow: hidden;
+}
 .area {
   margin-right: 14px;
   padding: 0 2px
@@ -184,5 +225,8 @@ export default {
     font-size: 10px;
     margin: 0 10px;
   }
+}
+.orange {
+  color: #f90;
 }
 </style>
