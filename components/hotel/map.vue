@@ -2,11 +2,31 @@
     <div>
         <!-- 地图的容器 -->
         <div id="container"></div>
+        <span>{{filter}}</span>
     </div>
 </template>
 
 <script>
 export default {
+    data () {
+        return {
+            locations:[]
+        }
+    },props:{
+        data:{
+            type:Array,
+            default:[]
+        }
+    },
+    computed:{
+        // 监听传入数据
+        filter(){
+            this.data.forEach(v=>{
+                this.locations.push(v.location)
+            })
+            return ''
+        }
+    },
     mounted() {
         // 异步导入地图js （来自于官网）
         var url = 'https://webapi.amap.com/maps?v=1.4.15&key=0e50af054087c7bec2bd57e4356a4bd3&callback=onLoad';
@@ -40,25 +60,41 @@ export default {
                 AMap.event.addListener(geolocation, 'error', onError)
                 function onComplete (data) {
                     // data是具体的定位信息
-                    console.log(data)
-                    // (点标记)创建一个 Marker 实例：
+                    this.open(data.addressComponent.city)
+                    var markerList=[]
+                    this.locations.forEach((v,i)=>{
+                        // (点标记)创建一个 Marker 实例：
                     var marker = new AMap.Marker({
-                        position: new AMap.LngLat(data.position.lng, data.position.lat),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-                        title: data.formattedAddress
+                        position: new AMap.LngLat(v.longitude, v.latitude),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+                        title: data.formattedAddress,
+                        map:map,
+                        offset:new AMap.Pixel(-10,-10),
+                        icon: "//vdata.amap.com/icons/b18/1/2.png"
                     });
-                    console.log(marker)
+                    
                     // 将创建的点标记添加到已有的地图实例：
-                    map.add(marker);
-                    // 移除已创建的 marker
-                    // map.remove(marker);
+                    markerList.push(marker);
+                    })
+                    
                 }
                 function onError (data) {
                     // 定位出错
                 }
             })
         }
+    },
+    methods: {
+        open(data) {
+          this.$alert(`当前定位城市是${data}`, "提示", {
+            confirmButtonText: "确定",
+            type: "success",
+            callback: action => {
+              this.$emit("getLocation", data);
+            }
+          });
+        }
     }
-};
+}
 </script>
 
 <style scoped lang="less">

@@ -30,24 +30,7 @@
     <HotelImage />
 
     <!-- 酒店价格 -->
-    <el-row type="flex" class="row-bg" justify="space-between">
-      <p>价格来源</p>
-      <p>低价房型</p>
-      <p>最低价格/每晚</p>
-    </el-row>
-    <!-- 携程 -->
-    <div>
-      <el-row type="flex" class="row-bgc" justify="space-between">
-        <span>携程</span>
-        <span>高级大床房A</span>
-        <div class="grid-content bg-purple">
-          <!-- <span>￥{{ scope.row.price }}</span> -->
-          <span>起</span>
-          <i class="el-icon-arrow-right height-light"></i>
-        </div>
-      </el-row>
-    </div>
-
+    <DetailPrice :data="Detail" />
     <!-- 地图 -->
     <DetailMap :data="Detail" />
 
@@ -62,6 +45,8 @@
 <script>
 // 酒店图片
 import HotelImage from "@/components/hotel/hotelimg";
+// 酒店价格
+import DetailPrice from "@/components/hotel/detailPrice";
 // 用户评论
 import UserReview from "@/components/hotel/userReview";
 // 酒店信息
@@ -70,6 +55,7 @@ import DetailInformation from "@/components/hotel/detailInformation";
 import DetailMap from "@/components/hotel/detailMap";
 export default {
   components: {
+    DetailPrice,
     HotelImage,
     DetailMap,
     DetailInformation,
@@ -77,7 +63,7 @@ export default {
   },
   data() {
     return {
-      id: 185,
+      id: 189,
       Detail: {
         hotellevel: {}, //酒店星级
         hotelbrand: {}, //酒店品牌
@@ -87,6 +73,7 @@ export default {
       }
     };
   },
+
   mounted() {
     this.$axios({
       url: `/hotels?id=` + this.id
@@ -94,6 +81,11 @@ export default {
       console.log(res.data.data);
       this.Detail = res.data.data[0];
     });
+  },
+  methods: {
+    phone() {
+      this.$router.push("https://hotels.ctrip.com/hotel/694679.html");
+    }
   }
 };
 </script>
@@ -114,36 +106,6 @@ export default {
     color: #333;
     font-weight: 400;
     i {
-      color: #f90;
-    }
-  }
-}
-
-.row-bg {
-  padding: 20px 0;
-  border-bottom: 1px solid #ebeef5;
-}
-p {
-  color: #909399;
-  font-size: 16px;
-}
-.row-bgc {
-  padding: 20px 0;
-  border-bottom: 1px solid #ebeef5;
-  :hover {
-    color: #606266;
-  }
-  span {
-    font-size: 14px;
-    color: #606266;
-  }
-}
-.bg-purple {
-  i {
-    color: #f90;
-  }
-  span {
-    &:nth-child(1) {
       color: #f90;
     }
   }

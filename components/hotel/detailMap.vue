@@ -34,6 +34,7 @@ export default {
     };
   },
   mounted() {
+    // 动态导入js到head头部中，导入该文件后会有全局的Amap对象
     var url =
       "https://webapi.amap.com/maps?v=1.4.15&key=7bc14854874f66a0277e73e3ff35da35&callback=onLoad&plugin=AMap.PlaceSearch";
     var jsapi = document.createElement("script");
@@ -63,7 +64,7 @@ export default {
         var placeSearch = new AMap.PlaceSearch({
           pageSize: 10, // 单页显示结果条数
           pageIndex: 1, // 页码
-          // city: this.data.city.name, // 兴趣点城市
+          city: this.data.city.name, // 兴趣点城市
           citylimit: true, //是否强制限制在设置的城市内搜索
           map: this.map, // 展现结果的地图实例
           panel: "panel", // 结果列表将在此容器中进行展示。
@@ -88,7 +89,7 @@ export default {
         var placeSearch = new AMap.PlaceSearch({
           pageSize: 10, // 单页显示结果条数
           pageIndex: 1, // 页码
-          // city: this.data.city.name, // 兴趣点城市
+          city: this.data.city.name, // 兴趣点城市
           citylimit: true, //是否强制限制在设置的城市内搜索
           map: this.map, // 展现结果的地图实例
           panel: "traffic", // 结果列表将在此容器中进行展示。
