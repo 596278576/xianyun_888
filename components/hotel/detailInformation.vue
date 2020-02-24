@@ -18,11 +18,15 @@
     <!-- 设施 -->
     <el-col :gutter="20" class="facility">
       <el-col :span="4">
-        <div class="grid-content bg-purple">基本设施</div>
+        <div class="grid-content bg-purple">主要设施</div>
       </el-col>
       <el-col :span="20">
-        <div class="grid-content bg-purple">
-          <i>热水壶</i>
+        <div
+          class="grid-content bg-purple df"
+          v-for="(item, index) in data.hotelassets"
+          :key="index"
+        >
+          <i>{{item.name}}</i>
         </div>
       </el-col>
     </el-col>
@@ -32,7 +36,7 @@
         <div class="grid-content bg-purple">停车服务</div>
       </el-col>
       <el-col :span="20">
-        <div class="grid-content bg-purple-light">-</div>
+        <div class="grid-content bg-purple-light">{{data.parking}}</div>
       </el-col>
     </el-row>
     <!-- 品牌 -->
@@ -42,7 +46,7 @@
       </el-col>
       <el-col :span="20">
         <div class="grid-content bg-purple">
-          <span>贝壳</span>
+          <span>{{data.hotelbrand.name}}</span>
         </div>
       </el-col>
     </el-row>
@@ -54,8 +58,20 @@ export default {
   props: {
     data: {
       type: Object,
-      default: {
-        hotelbrand: {} //酒店品牌
+      default: {}
+    }
+  },
+  watch: {
+    data(value) {
+      console.log(value);
+
+      //酒店品牌
+      if (value.hotelbrand === null) {
+        this.data.hotelbrand = { name: "-" };
+      }
+      // 停车服务
+      if (value.parking === null) {
+        this.data.parking = "-";
       }
     }
   }
@@ -75,14 +91,15 @@ export default {
 .facility {
   padding: 20px 10px;
   border-bottom: 1px solid #ccc;
-  /deep/ i {
-    border: 1px solid #eee;
-    border-radius: 4px;
-    color: #666;
-    background-color: #eee;
-    padding: 4px 10px;
-    margin-right: 10px;
-  }
+}
+.df {
+  border: 1px solid #eee;
+  padding: 4px 10px;
+  margin-right: 5px;
+  border-radius: 2px;
+  background-color: #eee;
+  color: #666;
+  display: inline;
 }
 .serve,
 .brand {

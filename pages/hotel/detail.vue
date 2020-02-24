@@ -63,7 +63,6 @@ export default {
   },
   data() {
     return {
-      id: 189,
       Detail: {
         hotellevel: {}, //酒店星级
         hotelbrand: {}, //酒店品牌
@@ -76,7 +75,7 @@ export default {
 
   mounted() {
     this.$axios({
-      url: `/hotels?id=` + this.id
+      url: `/hotels?id=` + this.$route.query.id //当前点击的id
     }).then(res => {
       console.log(res.data.data);
       this.Detail = res.data.data[0];
